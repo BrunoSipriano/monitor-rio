@@ -11,6 +11,8 @@
 .location-map{background:#fff;border:1px solid var(--line);border-radius:13px;padding:24px;margin:0 0 46px}.location-map iframe{display:block;width:100%;height:350px;border:0;border-radius:9px;margin-top:20px;background:#e7eee2}.map-caption{font-size:10px;line-height:1.6;color:var(--muted);margin:12px 0 0}@media(max-width:760px){.location-map{padding:18px;margin-bottom:33px}.location-map iframe{height:280px}.location-map .panel-heading{align-items:start;flex-wrap:wrap}}
 
 .hero-map{position:relative;min-height:390px;background:#dce6e2}.hero-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.hero-map-link{position:absolute;bottom:18px;left:18px;right:18px;background:#0c3138ed;color:#eef7ed;border:1px solid #ffffff35;border-radius:8px;padding:13px 16px;font-size:11px;box-shadow:0 3px 15px #0002}.hero-map-link small{display:block;margin-top:5px;color:#c1dfa8;font-size:10px}@media(max-width:760px){.hero-map{min-height:320px}.hero-map-link{bottom:14px;left:14px;right:14px}}
+
+.metric.primary p{color:#c3d7d1;line-height:1.7;font-size:11px}.periods{flex-shrink:0}.chart .empty{min-height:220px;display:grid;place-items:center;text-align:center;padding:30px}.outline-button:disabled,.text-button:disabled{opacity:.55;cursor:wait}.metric-value{overflow-wrap:anywhere}@media(max-width:480px){.panel-heading{flex-wrap:wrap;gap:14px}.metric-value.smaller{font-size:25px}}
 </style>
   
 </head>
@@ -19,85 +21,135 @@
   <main id="inicio">
     <section class="hero">
       <div class="hero-copy"><div class="eyebrow"><span class="dot"></span> CAJATI · SÃO PAULO</div><h1>Entender o rio.<br><em>Antecipar o cuidado.</em></h1><p>Monitoramento do nível da água e contexto meteorológico em um só lugar. Tecnologia para acompanhar mudanças e apoiar decisões.</p><a class="hero-link" href="#monitoramento">Explorar o monitoramento <span>↗</span></a></div>
-      <div class="hero-map"><iframe title="Google Maps: ponto de monitoramento em Cajati" src="https://maps.google.com/maps?q=-24.77737,-48.08920&amp;z=16&amp;output=embed" loading="eager" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><a class="hero-map-link" href="https://www.google.com/maps?q=-24.77737,-48.08920" target="_blank" rel="noopener">Ponto de monitoramento · Abrir no Maps ↗<small>−24.77737, −48.08920 · Cajati/SP</small></a></div>
+      <div class="hero-map"><iframe title="Google Maps: local proposto em Cajati" src="https://maps.google.com/maps?q=-24.77737,-48.08920&amp;z=16&amp;output=embed" loading="eager" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><a class="hero-map-link" href="https://www.google.com/maps?q=-24.77737,-48.08920" target="_blank" rel="noopener">Local proposto · Abrir no Maps ↗<small>−24.77737, −48.08920 · Cajati/SP</small></a></div>
     </section>
-    <div class="demo-banner"><span class="banner-icon">i</span><p><strong>Ambiente de demonstração.</strong> Nível, histórico e telemetria são simulados. Meteorologia é consultada separadamente na Open-Meteo. Este protótipo não emite alertas oficiais.</p></div>
-    <section id="monitoramento" class="section"><div class="section-heading"><div><div class="eyebrow dark">01 / MONITORAMENTO</div><h2>O pulso do rio</h2><p>Uma leitura clara do ponto monitorado.</p></div><div class="scenario"><label for="scenario">Cenário demonstrativo</label><select id="scenario"><option value="normal">Nível normal</option><option value="attention">Atenção</option><option value="danger">Nível elevado</option><option value="offline">Sem comunicação</option></select></div></div>
-      <div class="metrics"><article class="metric primary"><div class="metric-label">NÍVEL DA ÁGUA <span>SIMULADO</span></div><div class="metric-value"><span id="level">1,42</span><small>m</small></div><div class="status" id="level-status">● Dentro da faixa demonstrativa</div><div class="level-track"><span id="level-fill"></span><i></i><b></b></div><div class="track-labels"><span>0 m</span><span>3,5 m</span></div></article><article class="metric"><div class="metric-label">VARIAÇÃO EM 1 HORA</div><div class="metric-value smaller" id="variation">+2 <small>cm</small></div><p id="trend">Pequena elevação no cenário</p><span class="mini-label">Calculada a partir do histórico simulado</span></article><article class="metric"><div class="metric-label">ÚLTIMA LEITURA</div><div class="metric-value smaller" id="last-reading">—</div><p id="connection">Dados de demonstração</p><span class="mini-label">Sem conexão com o equipamento</span></article><article class="metric"><div class="metric-label">LIMITE DE ATENÇÃO</div><div class="metric-value smaller">2,00 <small>m</small></div><p>Perigo demonstrativo: 2,80 m</p><span class="mini-label">Valores ilustrativos · requerem validação</span></article></div>
-      <div class="monitor-grid"><article class="panel chart-panel"><div class="panel-heading"><div><h3>Comportamento do nível</h3><p>Histórico simulado · metros</p></div><div class="periods" role="group" aria-label="Período do gráfico"><button data-hours="6">6 h</button><button data-hours="24" class="selected">24 h</button><button data-hours="72">72 h</button></div></div><div class="chart-legend"><span><i class="legend-water"></i>Nível</span><span><i class="legend-attention"></i>Atenção · 2,00 m</span><span><i class="legend-danger"></i>Perigo · 2,80 m</span></div><div id="chart" class="chart" role="img" aria-label="Gráfico demonstrativo do nível da água"></div><div class="chart-footer"><span>Os limites são referências de demonstração.</span><button id="export" class="text-button">Baixar CSV ↓</button></div></article><article class="panel station"><div class="eyebrow dark">ESTAÇÃO / 001</div><h3>Ponto de Cajati</h3><p>Cajati/SP · ponto de monitoramento informado.<br>Latitude: −24.77737 · Longitude: −48.08920</p><div class="station-visual" aria-hidden="true"><span class="sensor-box">JSN</span><div class="beam"></div><div class="surface">≈ ≈ ≈ ≈ ≈</div></div><dl><div><dt>Localização</dt><dd><a href="https://www.google.com/maps?q=-24.77737,-48.08920" target="_blank" rel="noopener">Ver no mapa ↗</a></dd></div><div><dt>Sensor</dt><dd>Ultrassônico JSN</dd></div><div><dt>Controlador</dt><dd>Heltec ESP32 + LoRa</dd></div><div><dt>RSSI demonstrativo</dt><dd id="rssi">−86 dBm</dd></div><div><dt>Bateria demonstrativa</dt><dd id="battery">82%</dd></div></dl><div class="station-note">O sensor mede a distância até a superfície. O nível depende de uma referência de altura calibrada.</div></article></div>
-      <div class="notice" id="notice" role="status"><span class="notice-symbol">✓</span><div><strong id="notice-title">Cenário dentro da faixa normal</strong><p id="notice-text">Nenhum limite demonstrativo excedido. Acompanhe a evolução ao longo do tempo.</p></div><span class="notice-tag">SIMULAÇÃO</span></div>
+    <div class="demo-banner"><span class="banner-icon">i</span><p><strong>Protótipo funcional em bancada.</strong> Distância e sinal são leituras reais do equipamento. O ponto no mapa representa a aplicação proposta em Cajati; não uma instalação em operação no rio. Este protótipo não emite alertas oficiais.</p></div>
+    <section id="monitoramento" class="section">
+      <div class="section-heading"><div><div class="eyebrow dark">01 / DADOS DO PROTÓTIPO</div><h2>Da bancada ao painel</h2><p>Sensor → LoRa → receptor Wi-Fi → planilha → site.</p></div><button id="refresh-sensor" class="outline-button">Atualizar leituras ↻</button></div>
+      <div class="metrics">
+        <article class="metric primary"><div class="metric-label">DISTÂNCIA AO ALVO <span>REAL</span></div><div class="metric-value"><span id="distance">—</span><small> cm</small></div><div class="status" id="level-status">Consultando dados…</div><p>Distância entre o sensor e a superfície medida.</p></article>
+        <article class="metric"><div class="metric-label">NÍVEL CALCULADO</div><div class="metric-value smaller"><span id="level">—</span><small> cm</small></div><p id="level-note">Aguardando calibração da referência</p><span class="mini-label">Nível = altura de referência − distância</span></article>
+        <article class="metric"><div class="metric-label">ÚLTIMO REGISTRO</div><div class="metric-value smaller" id="last-reading">—</div><p id="connection">Consultando planilha…</p><span class="mini-label">Horário de chegada ao Google; não de aquisição</span></article>
+        <article class="metric"><div class="metric-label">PACOTE RECEBIDO</div><div class="metric-value smaller" id="packet">—</div><p>Número de sequência do transmissor</p><span class="mini-label">Limites de alerta ainda não calibrados</span></article>
+      </div>
+      <div class="monitor-grid">
+        <article class="panel chart-panel"><div class="panel-heading"><div><h3>Histórico de distância</h3><p>Dados reais · centímetros · horário de Brasília</p></div><div class="periods" role="group" aria-label="Período do gráfico"><button data-hours="0.25">15 min</button><button data-hours="1" class="selected">1 h</button><button data-hours="24">24 h</button></div></div><div class="chart-legend"><span><i class="legend-water"></i>Distância medida</span><span>Até 100 registros recentes da planilha</span></div><div id="chart" class="chart" role="img" aria-label="Aguardando histórico real"></div><div class="chart-footer"><span>Lacunas não são preenchidas. Horários de chegada ao Google.</span><button id="export" class="text-button" disabled>Baixar CSV ↓</button></div></article>
+        <article class="panel station"><div class="eyebrow dark">ESTAÇÃO / 001</div><h3>Protótipo em bancada</h3><p>Aplicação proposta: Cajati/SP.<br>Ponto de referência: −24.77737, −48.08920</p><div class="station-visual" aria-hidden="true"><span class="sensor-box">AJ</span><div class="beam"></div><div class="surface">≈ ≈ ≈ ≈ ≈</div></div><dl><div><dt>Local proposto</dt><dd><a href="https://www.google.com/maps?q=-24.77737,-48.08920" target="_blank" rel="noopener">Ver no mapa ↗</a></dd></div><div><dt>Sensor</dt><dd>AJ-SR04M</dd></div><div><dt>Controlador</dt><dd>Heltec V4 · LoRa</dd></div><div><dt>RSSI do último pacote</dt><dd id="rssi">—</dd></div><div><dt>SNR do último pacote</dt><dd id="snr">—</dd></div><div><dt>Bateria</dt><dd>Não medida</dd></div></dl><div class="station-note">Distância não é nível da água. O cálculo depende de uma referência física calibrada.</div></article>
+      </div>
+      <div class="notice" id="notice" role="status"><span class="notice-symbol">…</span><div><strong id="notice-title">Consultando leituras</strong><p id="notice-text">Aguardando resposta da integração com a planilha.</p></div><span class="notice-tag">PROTÓTIPO</span></div>
+      <p class="source-line" id="sensor-source">Atualização automática a cada 15 segundos enquanto a página estiver aberta.</p>
     </section>
-<section id="meteorologia" class="section weather-section"><div class="section-heading"><div><div class="eyebrow dark">02 / CONTEXTO METEOROLÓGICO</div><h2>Um olhar para o céu</h2><p>Condições estimadas e previsão no ponto de monitoramento em Cajati/SP.</p></div><button id="refresh-weather" class="outline-button">Atualizar previsão ↻</button></div><div class="weather-grid"><article class="weather-current"><div class="weather-label">CAJATI / SP <span>OPEN-METEO</span></div><div id="weather-icon" class="weather-icon">☁</div><div class="temperature" id="temperature">—<small> °C</small></div><h3 id="weather-description">Consultando meteorologia…</h3><div class="weather-details"><div><span>Umidade</span><strong id="humidity">—</strong></div><div><span>Vento</span><strong id="wind">—</strong></div><div><span>Precipitação atual*</span><strong id="current-rain">—</strong></div></div><p class="weather-time" id="weather-time">Aguardando a fonte externa.</p></article><article class="panel forecast"><div class="panel-heading"><div><h3>Próximos três dias</h3><p>Fonte: Open-Meteo · hoje e os dois dias seguintes</p></div><span class="source-tag">PREVISÃO</span></div><div id="forecast-days" class="forecast-days"><p class="empty">Carregando previsão…</p></div><div class="weather-footnote">* Condições atuais estimadas por modelos meteorológicos, não medidas pelo JSN. Chuva prevista no ponto não equivale à chuva observada em toda a bacia.</div></article></div><div class="source-line"><span id="weather-source-status">Fonte externa · atualização automática a cada 30 minutos enquanto o site estiver aberto.</span><a href="https://open-meteo.com/" target="_blank" rel="noopener">Dados meteorológicos por Open-Meteo ↗</a></div></section>
-    <section id="projeto" class="section project-section"><div class="project-intro"><div class="eyebrow dark">03 / CIÊNCIA APLICADA</div><h2>Da medição<br>à informação.</h2><p>Um protótipo acadêmico que conecta sensores, comunicação sem fio e visualização de dados para estudar o monitoramento de rios.</p><span class="project-pill">Internet das Coisas · Monitoramento ambiental</span></div><div class="project-content"><div class="steps"><article><span>01</span><h3>Medir</h3><p>O JSN estima a distância entre o sensor e a superfície da água.</p></article><article><span>02</span><h3>Transmitir</h3><p>A Heltec envia leituras pelo rádio. A integração com a internet será implementada na próxima etapa.</p></article><article><span>03</span><h3>Interpretar</h3><p>Uma referência calibrada permite calcular o nível e comparar sua evolução.</p></article></div><div class="method-note"><h3>Transparência dos dados</h3><p>O painel distingue medições, cálculos e previsão meteorológica. Nesta versão, todos os dados hidrológicos são demonstrativos. Limites locais, precisão e disponibilidade deverão ser validados em campo.</p></div></div></section>
+<section id="meteorologia" class="section weather-section"><div class="section-heading"><div><div class="eyebrow dark">02 / CONTEXTO METEOROLÓGICO</div><h2>Um olhar para o céu</h2><p>Condições estimadas e previsão no ponto de monitoramento em Cajati/SP.</p></div><button id="refresh-weather" class="outline-button">Atualizar previsão ↻</button></div><div class="weather-grid"><article class="weather-current"><div class="weather-label">CAJATI / SP <span>OPEN-METEO</span></div><div id="weather-icon" class="weather-icon">☁</div><div class="temperature" id="temperature">—<small> °C</small></div><h3 id="weather-description">Consultando meteorologia…</h3><div class="weather-details"><div><span>Umidade</span><strong id="humidity">—</strong></div><div><span>Vento</span><strong id="wind">—</strong></div><div><span>Precipitação atual*</span><strong id="current-rain">—</strong></div></div><p class="weather-time" id="weather-time">Aguardando a fonte externa.</p></article><article class="panel forecast"><div class="panel-heading"><div><h3>Próximos três dias</h3><p>Fonte: Open-Meteo · hoje e os dois dias seguintes</p></div><span class="source-tag">PREVISÃO</span></div><div id="forecast-days" class="forecast-days"><p class="empty">Carregando previsão…</p></div><div class="weather-footnote">* Condições meteorológicas fornecidas pela Open-Meteo, não medidas pelo AJ-SR04M. Chuva prevista no ponto não equivale à chuva observada em toda a bacia.</div></article></div><div class="source-line"><span id="weather-source-status">Fonte externa · atualização automática a cada 30 minutos enquanto o site estiver aberto.</span><a href="https://open-meteo.com/" target="_blank" rel="noopener">Dados meteorológicos por Open-Meteo ↗</a></div></section>
+    <section id="projeto" class="section project-section"><div class="project-intro"><div class="eyebrow dark">03 / CIÊNCIA APLICADA</div><h2>Da medição<br>à informação.</h2><p>Um protótipo acadêmico que conecta sensores, comunicação sem fio e visualização de dados para estudar o monitoramento de rios.</p><span class="project-pill">Internet das Coisas · Monitoramento ambiental</span></div><div class="project-content"><div class="steps"><article><span>01</span><h3>Medir</h3><p>O AJ-SR04M mede a distância entre o sensor e a superfície da água.</p></article><article><span>02</span><h3>Transmitir</h3><p>O transmissor envia por LoRa. O receptor usa Wi-Fi para gravar as leituras na planilha Google.</p></article><article><span>03</span><h3>Interpretar</h3><p>Uma referência calibrada permite calcular o nível e comparar sua evolução.</p></article></div><div class="method-note"><h3>Transparência dos dados</h3><p>O painel distingue medições, cálculos e previsão meteorológica. Distância e sinal vêm do protótipo em bancada. O horário é o de chegada à planilha e pode sofrer atraso de rede. O nível depende de calibração; não há classificação de risco automática. Precisão e aplicação em campo ainda exigem validação.</p></div></div></section>
   </main><footer><a class="footer-brand" href="#inicio">≈ Sipriano</a><p>Protótipo para TCC · Cajati/SP<br>Monitoramento experimental, sem vínculo com um serviço oficial de alerta.</p><a href="#inicio">Voltar ao topo ↑</a></footer>
 <script>'use strict';
 const $ = id => document.getElementById(id);
-const fmt = (n, digits = 1) => Number(n).toLocaleString('pt-BR', {minimumFractionDigits: digits, maximumFractionDigits: digits});
-const states = {
-  normal: {level:1.42,delta:2,title:'Cenário dentro da faixa normal',text:'Nenhum limite demonstrativo excedido. Acompanhe a evolução ao longo do tempo.',status:'● Dentro da faixa demonstrativa',symbol:'✓'},
-  attention: {level:2.23,delta:14,title:'Limite demonstrativo de atenção excedido',text:'O cenário apresenta elevação. O limite de 2,00 m é ilustrativo e precisa de validação local.',status:'● Atenção demonstrativa',symbol:'!'},
-  danger: {level:3.08,delta:24,title:'Nível elevado no cenário demonstrativo',text:'O nível ultrapassa 2,80 m, referência ilustrativa de perigo. Esta simulação não é um aviso oficial.',status:'● Perigo demonstrativo',symbol:'!'},
-  offline: {level:1.42,delta:2,title:'Sem comunicação no cenário demonstrativo',text:'Última leitura simulada há 45 minutos. Um dado antigo não deve ser interpretado como condição atual.',status:'● Último nível conhecido',symbol:'?'}
-};
-let hours = 24;
-const demoTime = new Date();
-function history() {
-  const state = states[$('scenario').value];
-  const count = hours + 1;
-  return Array.from({length:count}, (_, i) => {
-    const progress = i / (count - 1);
-    const wave = .045 * (Math.sin(i * .65) - Math.sin((count - 1) * .65));
-    const rise = state.delta / 100;
-    const level = Math.max(.1, state.level - rise * (hours * (1 - progress)) + wave);
-    return {time:new Date(demoTime.getTime() - (count - 1 - i) * 3600000),level};
-  });
+const fmt = (n, digits = 1) => Number(n).toLocaleString('pt-BR', {minimumFractionDigits:digits,maximumFractionDigits:digits});
+const SENSOR_API = 'https://script.google.com/macros/s/AKfycbyTYblMuhtbh0SddtDL1NpEozXwSh0an4xGfc8uFI4PzYdiTJzvLehhlEOqAPGu4HeL/exec';
+const LOCAL_TIME = {timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',second:'2-digit'};
+let readings = [], hours = 1, sensorBusy = false, sensorError = false, lastConsult = null;
+function cleanReading(r) {
+  if (!r || r.estacao !== '001' || !Number.isFinite(Date.parse(r.recebido_em)) ||
+      typeof r.valida !== 'boolean' || !Number.isSafeInteger(r.sequencia) || r.sequencia < 0 ||
+      !Number.isSafeInteger(r.uptime_ms) || r.uptime_ms < 0 ||
+      !Number.isFinite(r.rssi_dbm) || r.rssi_dbm < -160 || r.rssi_dbm > 0 ||
+      !Number.isFinite(r.snr_db) || Math.abs(r.snr_db)>50 ||
+      (r.valida && (!Number.isFinite(r.distancia_cm) || r.distancia_cm <= 20 || r.distancia_cm > 800)) ||
+      (!r.valida && r.distancia_cm !== null) ||
+      (r.nivel_cm !== null && (!r.valida || !Number.isFinite(r.nivel_cm) || r.nivel_cm < 0 || r.nivel_cm > 800)))
+    throw new Error('Registro inválido');
+  return {...r, time:Date.parse(r.recebido_em)};
+}
+function visibleReadings() {
+  return readings.filter(r=>r.time>=Date.now()-hours*3600000);
 }
 function drawChart() {
-  const data = history(), w = 760, h = 265, left = 42, right = 16, top = 17, bottom = 34;
-  const x = i => left + i / (data.length - 1) * (w - left - right);
-  const y = n => h - bottom - n / 3.5 * (h - top - bottom);
-  let svg = '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#80b4a1" stop-opacity=".3"/><stop offset="1" stop-color="#80b4a1" stop-opacity=".02"/></linearGradient></defs>';
-  for (let n = 0; n <= 3; n++) svg += `<line x1="${left}" x2="${w-right}" y1="${y(n)}" y2="${y(n)}" stroke="#e9eee7"/><text x="27" y="${y(n)+4}" text-anchor="end" font-size="10" fill="#879889">${n},0</text>`;
-  for (const [n,color] of [[2,'#bb9149'],[2.8,'#be7167']]) svg += `<line x1="${left}" x2="${w-right}" y1="${y(n)}" y2="${y(n)}" stroke="${color}" stroke-dasharray="5 5" opacity=".8"/>`;
-  const path = data.map((d,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(d.level).toFixed(1)).join(' ');
-  svg += `<path d="${path} L${x(data.length-1)} ${h-bottom} L${left} ${h-bottom} Z" fill="url(#chart-fill)"/><path d="${path}" fill="none" stroke="#267461" stroke-width="2.5" stroke-linejoin="round"/>`;
-  [0,.25,.5,.75,1].forEach(f => {
-    const i = Math.round(f*(data.length-1));
-    const label = hours === 72 ? data[i].time.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit'}) : data[i].time.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    svg += `<text x="${x(i)}" y="${h-9}" text-anchor="${f===0?'start':f===1?'end':'middle'}" font-size="9" fill="#879889">${label}</text>`;
+  const data=visibleReadings();
+  const valid=data.filter(r=>r.valida);
+  $('export').disabled=!data.length;
+  if (!valid.length) {
+    $('chart').innerHTML='<p class="empty">Nenhuma distância válida neste período. O gráfico não preenche lacunas com dados simulados.</p>';
+    $('chart').setAttribute('aria-label','Sem dados válidos no período selecionado');
+    return;
+  }
+  const w=760,h=265,left=53,right=20,top=20,bottom=38;
+  const values=valid.map(r=>r.distancia_cm);
+  const low=Math.max(0,Math.floor(Math.min(...values)-2)), high=Math.ceil(Math.max(...values)+2);
+  const start=data[0].time,end=Math.max(start+1000,data.at(-1).time);
+  const x=r=>left+(r.time-start)/(end-start)*(w-left-right);
+  const y=v=>h-bottom-(v-low)/(high-low)*(h-top-bottom);
+  let svg=`<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">`;
+  for(let i=0;i<=4;i++) {
+    const n=low+(high-low)*i/4;
+    svg+=`<line x1="${left}" x2="${w-right}" y1="${y(n)}" y2="${y(n)}" stroke="#e9eee7"/><text x="${left-8}" y="${y(n)+4}" text-anchor="end" font-size="10" fill="#71877d">${fmt(n)}</text>`;
+  }
+  let path='',previous=null;
+  data.forEach(r=>{
+    if(!r.valida){previous=null;return;}
+    // Não ligar visualmente períodos sem registros ou reinícios do transmissor.
+    const contiguous=previous && r.time-previous.time<=30000 && r.uptime_ms>=previous.uptime_ms;
+    path+=(contiguous?' L':' M')+x(r).toFixed(2)+' '+y(r.distancia_cm).toFixed(2);
+    previous=r;
   });
-  const last=data.at(-1);
-  svg += `<circle cx="${x(data.length-1)}" cy="${y(last.level)}" r="4" fill="#267461" stroke="white" stroke-width="2"/></svg>`;
-  $('chart').innerHTML=svg;
-  $('chart').setAttribute('aria-label', `Histórico simulado de ${hours} horas. Último nível ${fmt(last.level,2)} metros. Atenção em 2 metros e perigo em 2,8 metros, limites ilustrativos.`);
+  svg+=`<path d="${path}" fill="none" stroke="#267461" stroke-width="2.5" stroke-linejoin="round"/>`;
+  valid.forEach(r=>{svg+=`<circle cx="${x(r)}" cy="${y(r.distancia_cm)}" r="2.4" fill="#267461"/>`;});
+  for(let i=0;i<=4;i++) {
+    const t=start+(end-start)*i/4;
+    svg+=`<text x="${left+(w-left-right)*i/4}" y="${h-10}" text-anchor="${i===0?'start':i===4?'end':'middle'}" font-size="9" fill="#71877d">${new Date(t).toLocaleTimeString('pt-BR',LOCAL_TIME)}</text>`;
+  }
+  $('chart').innerHTML=svg+'</svg>';
+  $('chart').setAttribute('aria-label',`Distância real em centímetros. ${valid.length} leituras válidas. Horários de chegada à planilha em Brasília.`);
 }
-function renderState() {
-  const key=$('scenario').value,s=states[key];
-  $('level').textContent=fmt(s.level,2);
-  $('level-status').textContent=s.status;
-  $('variation').innerHTML=key==='offline'?'—':`+${s.delta} <small>cm</small>`;
-  $('trend').textContent=key==='offline'?'Variação atual indisponível':s.delta>10?'Elevação no cenário demonstrativo':'Pequena elevação no cenário';
-  $('last-reading').textContent=key==='offline'?'45 min':demoTime.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  $('connection').textContent=key==='offline'?'Última leitura simulada':'Horário da sessão demonstrativa';
-  $('rssi').textContent=key==='offline'?'Indisponível':'−86 dBm';
-  $('battery').textContent=key==='offline'?'Indisponível':'82%';
-  $('level-fill').style.width=Math.min(100,s.level/3.5*100)+'%';
-  $('notice').className='notice '+key;
-  $('notice-title').textContent=s.title; $('notice-text').textContent=s.text;
-  document.querySelector('.notice-symbol').textContent=s.symbol;
-  drawChart();
+function renderSensor() {
+  const last=readings.at(-1);
+  const age=last ? Date.now()-last.time : Infinity;
+  const stale=age>90000 || age < -60000;
+  $('distance').textContent=last?.valida?fmt(last.distancia_cm):'—';
+  $('level').textContent=last?.valida && Number.isFinite(last.nivel_cm)?fmt(last.nivel_cm):'—';
+  $('level-note').textContent=last?.valida && Number.isFinite(last.nivel_cm)?'Calculado pela referência configurada no receptor':'Aguardando calibração da referência';
+  $('last-reading').textContent=last?new Date(last.time).toLocaleTimeString('pt-BR',LOCAL_TIME):'—';
+  $('connection').textContent=last?new Date(last.time).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'})+' · horário de Brasília':'Nenhuma leitura disponível';
+  $('rssi').textContent=last?fmt(last.rssi_dbm,0)+' dBm':'—';
+  $('snr').textContent=last?fmt(last.snr_db,0)+' dB':'—';
+  $('packet').textContent=last?String(last.sequencia):'—';
+  $('level-status').textContent=!last?'Aguardando dados':sensorError?'Falha na consulta · último registro':stale?'Registro antigo · sem atualização recente':last.valida?'Leitura válida · bancada':'Sensor sem leitura válida';
+  const title=sensorError?'Não foi possível atualizar a consulta':!last?'Aguardando a primeira leitura':stale?'Último registro desatualizado':!last.valida?'Sensor sem leitura válida':'Recepção de dados confirmada';
+  $('notice-title').textContent=title;
+  $('notice').className='notice '+(sensorError||stale?'offline':!last.valida?'attention':'normal');
+  document.querySelector('.notice-symbol').textContent=sensorError||stale?'!':last.valida?'✓':'!';
+  $('notice-text').textContent=sensorError?'Confira a conexão e tente atualizar. Os últimos valores exibidos não foram renovados.':!last?'A consulta está disponível, mas ainda não há registros na aba Leituras_LoRa.':stale?'O último registro chegou há mais de 90 segundos ou o relógio está divergente. Verifique transmissor, receptor e Wi-Fi.':!last.valida?'O rádio recebeu um pacote, mas o sensor informou uma leitura inválida.':'Leituras reais do protótipo em bancada. O horário indica chegada à planilha; não comprova instalação nem condição do rio.';
+  $('sensor-source').textContent=(lastConsult?'Consulta: '+new Date(lastConsult).toLocaleTimeString('pt-BR',LOCAL_TIME)+' · ':'')+'Atualização a cada 15 s com a página aberta · até 100 registros recentes.';
 }
-$('scenario').addEventListener('change',renderState);
+async function loadSensor() {
+  if(sensorBusy)return;
+  sensorBusy=true;$('refresh-sensor').disabled=true;
+  try {
+    const response=await fetch(SENSOR_API+'?t='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(20000)});
+    if(!response.ok)throw new Error('HTTP');
+    const data=await response.json();
+    if(data.ok!==true || !Array.isArray(data.leituras) || data.leituras.length>100)throw new Error('Resposta inválida');
+    const incoming=data.leituras.map(cleanReading).sort((a,b)=>a.time-b.time);
+    if((incoming.length===0)!==(data.ultima===null))throw new Error('Última leitura inconsistente');
+    readings=incoming;sensorError=false;lastConsult=Date.now();
+  }catch(error){sensorError=true;}
+  finally{sensorBusy=false;$('refresh-sensor').disabled=false;renderSensor();drawChart();}
+}
+$('refresh-sensor').addEventListener('click',loadSensor);
 document.querySelectorAll('[data-hours]').forEach(button=>button.addEventListener('click',()=>{
   hours=Number(button.dataset.hours);
   document.querySelectorAll('[data-hours]').forEach(b=>b.classList.toggle('selected',b===button));
   drawChart();
 }));
 $('export').addEventListener('click',()=>{
-  const csv='\uFEFForigem;horario;nivel_m\n'+history().map(d=>`SIMULADO;${d.time.toISOString()};${fmt(d.level,3)}`).join('\n');
+  const csv='\uFEFForigem;recebido_em;pacote;valida;distancia_cm;nivel_cm;rssi_dbm;snr_db\n'+visibleReadings().map(r=>['REAL_BANCADA',new Date(r.time).toISOString(),r.sequencia,r.valida,r.valida?fmt(r.distancia_cm):'',Number.isFinite(r.nivel_cm)?fmt(r.nivel_cm):'',r.rssi_dbm,r.snr_db].join(';')).join('\n');
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  const link=document.createElement('a');link.href=url;link.download='nivel-rio-SIMULADO.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const link=document.createElement('a');link.href=url;link.download='sipriano-leituras-reais.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadSensor();});
+setInterval(()=>{if(!document.hidden)loadSensor();},15000);
+setInterval(()=>{if(!document.hidden)renderSensor();},5000);
+renderSensor();drawChart();loadSensor();
+
 const weatherCode=code=>{
   if(code===0)return ['Céu limpo','☀'];
   if(code===1)return ['Predominantemente limpo','☀'];
@@ -116,14 +168,14 @@ async function fetchJson(url){const res=await fetch(url,{signal:AbortSignal.time
 function renderWeather(data,fetchedAt){
   const c=data.current,d=data.daily;
   if(!c||!d||!d.time?.length)throw new Error('Dados incompletos');
-  const [description,icon]=weatherCode(c.weather_code);
+  const [fallbackDescription,icon]=weatherCode(c.weather_code); const description=c.description || fallbackDescription;
   $('temperature').innerHTML=`${fmt(c.temperature_2m)}<small> °C</small>`;
   $('weather-description').textContent=description; $('weather-icon').textContent=icon;
   $('humidity').textContent=fmt(c.relative_humidity_2m,0)+'%'; $('wind').textContent=fmt(c.wind_speed_10m)+' km/h'; $('current-rain').textContent=fmt(c.precipitation)+' mm';
   $('weather-time').textContent='Referência do modelo: '+c.time.replace('T',' às ')+' · '+(data.timezone||'horário local');
   $('forecast-days').replaceChildren();
   d.time.slice(0,3).forEach((date,i)=>{
-    const [desc,symbol]=weatherCode(d.weather_code[i]);
+    const [fallbackDesc,symbol]=weatherCode(d.weather_code[i]); const desc=d.description?.[i] || fallbackDesc;
     const day=document.createElement('article');day.className='forecast-day';
     const stamp=new Date(date+'T12:00:00');
     day.innerHTML=`<h4>${i===0?'Hoje':i===1?'Amanhã':stamp.toLocaleDateString('pt-BR',{weekday:'long'})}</h4><span class="date">${stamp.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</span><div class="forecast-icon" aria-hidden="true">${symbol}</div><div class="forecast-temp">${fmt(d.temperature_2m_max[i],0)}°<small>${fmt(d.temperature_2m_min[i],0)}°</small></div><p class="forecast-description">${desc}</p><div class="rain">${fmt(d.precipitation_sum[i])} mm<small>${fmt(d.precipitation_probability_max[i],0)}% de probabilidade de chuva</small></div>`;
@@ -137,12 +189,13 @@ async function loadWeather(force=false){
   weatherBusy=true;$('refresh-weather').disabled=true;
   let cached=null;
   try{
-    try{cached=JSON.parse(localStorage.getItem('sipriano-weather-24.77737-48.08920-v1'));}catch{}
+    try{cached=JSON.parse(localStorage.getItem('sipriano-openmeteo-v2'));}catch{}
     if(!force && cached && Date.now()-cached.fetchedAt<1800000){renderWeather(cached.data,cached.fetchedAt);return;}
-    const params=new URLSearchParams({latitude:-24.77737,longitude:-48.08920,current:'temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m',daily:'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max',timezone:'America/Sao_Paulo',forecast_days:'3'});
-    const data=await fetchJson('https://api.open-meteo.com/v1/forecast?'+params);
-    const fetchedAt=Date.now();renderWeather(data,fetchedAt);
-    try{localStorage.setItem('sipriano-weather-24.77737-48.08920-v1',JSON.stringify({data,fetchedAt}));}catch{}
+    const data=await fetchJson('https://api.open-meteo.com/v1/forecast?latitude=-24.77737&longitude=-48.08920&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max&timezone=America%2FSao_Paulo&forecast_days=3');
+    const fetchedAt=Date.now();
+    if(!Number.isFinite(fetchedAt) || Date.now()-fetchedAt>10800000)throw new Error('Dados meteorológicos desatualizados');
+    renderWeather(data,fetchedAt);
+    try{localStorage.setItem('sipriano-openmeteo-v2',JSON.stringify({data,fetchedAt}));}catch{}
   }catch(error){
     if(cached){try{renderWeather(cached.data,cached.fetchedAt);}catch{cached=null;}}
     if(!cached){$('weather-description').textContent='Meteorologia indisponível';$('forecast-days').innerHTML='<p class="empty">Não foi possível consultar a previsão. Verifique a conexão e tente novamente.</p>';$('weather-time').textContent='Nenhum dado meteorológico foi inventado para substituir a fonte.';}
@@ -151,8 +204,10 @@ async function loadWeather(force=false){
 }
 $('refresh-weather').addEventListener('click',()=>loadWeather(true));
 setInterval(()=>{if(!document.hidden)loadWeather();},1800000);
-renderState();loadWeather();
+loadWeather();
+
 </script></body></html>
+
 
 
 
