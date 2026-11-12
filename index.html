@@ -33,7 +33,7 @@
         <article class="metric"><div class="metric-label">PACOTE RECEBIDO</div><div class="metric-value smaller" id="packet">—</div><p>Número de sequência do transmissor</p><span class="mini-label">Limites de alerta ainda não calibrados</span></article>
       </div>
       <div class="monitor-grid">
-        <article class="panel chart-panel"><div class="panel-heading"><div><h3>Histórico de distância</h3><p>Dados reais · centímetros · horário de Brasília</p></div><div class="periods" role="group" aria-label="Período do gráfico"><button data-hours="0.25">15 min</button><button data-hours="1" class="selected">1 h</button><button data-hours="24">24 h</button></div></div><div class="chart-legend"><span><i class="legend-water"></i>Distância medida</span><span>Até 100 registros recentes da planilha</span></div><div id="chart" class="chart" role="img" aria-label="Aguardando histórico real"></div><div class="chart-footer"><span>Lacunas não são preenchidas. Horários de chegada ao Google.</span><button id="export" class="text-button" disabled>Baixar CSV ↓</button></div></article>
+        <article class="panel chart-panel"><div class="panel-heading"><div><h3>Histórico do nível da água</h3><p>Nível em relação à referência calibrada · cm · horário de Brasília</p></div><div class="periods" role="group" aria-label="Período do gráfico"><button data-hours="0.25">15 min</button><button data-hours="1" class="selected">1 h</button><button data-hours="24">24 h</button></div></div><div class="chart-legend"><span><i class="legend-water"></i>Nível calculado</span><span>Até 100 registros recentes da planilha</span></div><div id="chart" class="chart" role="img" aria-label="Aguardando histórico real"></div><div class="chart-footer"><span>Lacunas não são preenchidas. Horários de chegada ao Google.</span><button id="export" class="text-button" disabled>Baixar CSV ↓</button></div></article>
         <article class="panel station"><div class="eyebrow dark">ESTAÇÃO / 001</div><h3>Protótipo em bancada</h3><p>R. Ernesto Kugler, 248<br>Maria Antonieta · Pinhais/PR</p><div class="station-visual" aria-hidden="true"><span class="sensor-box">AJ</span><div class="beam"></div><div class="surface">≈ ≈ ≈ ≈ ≈</div></div><dl><div><dt>Localização do sensor</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Ernesto%20Kugler%2C%20248%20-%20Maria%20Antonieta%2C%20Pinhais%20-%20PR&amp;query_place_id=ChIJF13SBS7u3JQRYxxUoDRFU5I" target="_blank" rel="noopener">Ver no mapa ↗</a></dd></div><div><dt>Sensor</dt><dd>AJ-SR04M</dd></div><div><dt>Controlador</dt><dd>Heltec V4 · LoRa</dd></div><div><dt>RSSI do último pacote</dt><dd id="rssi">—</dd></div><div><dt>SNR do último pacote</dt><dd id="snr">—</dd></div><div><dt>Bateria</dt><dd>Não medida</dd></div></dl><div class="station-note">Distância não é nível da água. O cálculo depende de uma referência física calibrada.</div></article>
       </div>
       <div class="notice" id="notice" role="status"><span class="notice-symbol">…</span><div><strong id="notice-title">Consultando leituras</strong><p id="notice-text">Aguardando resposta da integração com a planilha.</p></div><span class="notice-tag">PROTÓTIPO</span></div>
@@ -63,17 +63,18 @@ function cleanReading(r) {
 function visibleReadings() {
   return readings.filter(r=>r.time>=Date.now()-hours*3600000);
 }
+const hasLevel = r => r?.valida === true && Number.isFinite(r.nivel_cm);
 function drawChart() {
   const data=visibleReadings();
-  const valid=data.filter(r=>r.valida);
+  const valid=data.filter(hasLevel);
   $('export').disabled=!data.length;
   if (!valid.length) {
-    $('chart').innerHTML='<p class="empty">Nenhuma distância válida neste período. O gráfico não preenche lacunas com dados simulados.</p>';
-    $('chart').setAttribute('aria-label','Sem dados válidos no período selecionado');
+    $('chart').innerHTML='<p class="empty">Nenhum nível calculado neste período. O nível fica disponível após a calibração e requer uma leitura válida.</p>';
+    $('chart').setAttribute('aria-label','Sem níveis calculados no período selecionado');
     return;
   }
   const w=760,h=265,left=53,right=20,top=20,bottom=38;
-  const values=valid.map(r=>r.distancia_cm);
+  const values=valid.map(r=>r.nivel_cm);
   const low=Math.max(0,Math.floor(Math.min(...values)-2)), high=Math.ceil(Math.max(...values)+2);
   const start=data[0].time,end=Math.max(start+1000,data.at(-1).time);
   const x=r=>left+(r.time-start)/(end-start)*(w-left-right);
@@ -85,28 +86,28 @@ function drawChart() {
   }
   let path='',previous=null;
   data.forEach(r=>{
-    if(!r.valida){previous=null;return;}
+    if(!hasLevel(r)){previous=null;return;}
     // Não ligar visualmente períodos sem registros ou reinícios do transmissor.
     const contiguous=previous && r.time-previous.time<=30000 && r.uptime_ms>=previous.uptime_ms;
-    path+=(contiguous?' L':' M')+x(r).toFixed(2)+' '+y(r.distancia_cm).toFixed(2);
+    path+=(contiguous?' L':' M')+x(r).toFixed(2)+' '+y(r.nivel_cm).toFixed(2);
     previous=r;
   });
   svg+=`<path d="${path}" fill="none" stroke="#267461" stroke-width="2.5" stroke-linejoin="round"/>`;
-  valid.forEach(r=>{svg+=`<circle cx="${x(r)}" cy="${y(r.distancia_cm)}" r="2.4" fill="#267461"/>`;});
+  valid.forEach(r=>{svg+=`<circle cx="${x(r)}" cy="${y(r.nivel_cm)}" r="2.4" fill="#267461"/>`;});
   for(let i=0;i<=4;i++) {
     const t=start+(end-start)*i/4;
     svg+=`<text x="${left+(w-left-right)*i/4}" y="${h-10}" text-anchor="${i===0?'start':i===4?'end':'middle'}" font-size="9" fill="#71877d">${new Date(t).toLocaleTimeString('pt-BR',LOCAL_TIME)}</text>`;
   }
   $('chart').innerHTML=svg+'</svg>';
-  $('chart').setAttribute('aria-label',`Distância real em centímetros. ${valid.length} leituras válidas. Horários de chegada à planilha em Brasília.`);
+  $('chart').setAttribute('aria-label',`Nível calculado em centímetros. ${valid.length} registros com nível calculado. Horários de chegada à planilha em Brasília.`);
 }
 function renderSensor() {
   const last=readings.at(-1);
   const age=last ? Date.now()-last.time : Infinity;
   const stale=age>90000 || age < -60000;
   $('distance').textContent=last?.valida?fmt(last.distancia_cm + 180):'—';
-  $('level').textContent=last?.valida && Number.isFinite(last.nivel_cm)?fmt(last.nivel_cm):'—';
-  $('level-note').textContent=last?.valida && Number.isFinite(last.nivel_cm)?'Calculado pela referência configurada no receptor':'Aguardando calibração da referência';
+  $('level').textContent=hasLevel(last)?fmt(last.nivel_cm):'—';
+  $('level-note').textContent=hasLevel(last)?'Calculado pela referência configurada no receptor':'Aguardando calibração da referência';
   $('last-reading').textContent=last?new Date(last.time).toLocaleTimeString('pt-BR',LOCAL_TIME):'—';
   $('connection').textContent=last?new Date(last.time).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'})+' · horário de Brasília':'Nenhuma leitura disponível';
   $('rssi').textContent=last?fmt(last.rssi_dbm,0)+' dBm':'—';
