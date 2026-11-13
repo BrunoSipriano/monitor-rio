@@ -13,7 +13,7 @@
 .hero-map{position:relative;min-height:390px;background:#dce6e2}.hero-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.hero-map-link{position:absolute;bottom:18px;left:18px;right:18px;background:#0c3138ed;color:#eef7ed;border:1px solid #ffffff35;border-radius:8px;padding:13px 16px;font-size:11px;box-shadow:0 3px 15px #0002}.hero-map-link small{display:block;margin-top:5px;color:#c1dfa8;font-size:10px}@media(max-width:760px){.hero-map{min-height:320px}.hero-map-link{bottom:14px;left:14px;right:14px}}
 
 .metric.primary p{color:#c3d7d1;line-height:1.7;font-size:11px}.periods{flex-shrink:0}.chart .empty{min-height:220px;display:grid;place-items:center;text-align:center;padding:30px}.outline-button:disabled,.text-button:disabled{opacity:.55;cursor:wait}.metric-value{overflow-wrap:anywhere}@media(max-width:480px){.panel-heading{flex-wrap:wrap;gap:14px}.metric-value.smaller{font-size:25px}}
-</style>
+#interpolation-legend[hidden]{display:none}</style>
   
 </head>
 <body>
@@ -33,7 +33,7 @@
         <article class="metric"><div class="metric-label">PACOTE RECEBIDO</div><div class="metric-value smaller" id="packet">—</div><p>Número de sequência do transmissor</p><span class="mini-label">Limites de alerta ainda não calibrados</span></article>
       </div>
       <div class="monitor-grid">
-        <article class="panel chart-panel"><div class="panel-heading"><div><h3>Histórico do nível da água</h3><p>Nível em relação à referência calibrada · cm · horário de Brasília</p></div><div class="periods" role="group" aria-label="Período do gráfico"><button data-hours="0.25">15 min</button><button data-hours="1" class="selected">1 h</button><button data-hours="24">24 h</button></div></div><div class="chart-legend"><span><i class="legend-water"></i>Nível calculado</span><span>Registros da planilha no período selecionado</span></div><div id="chart" class="chart" role="img" aria-label="Aguardando histórico real"></div><div class="chart-footer"><span>Lacunas não são preenchidas. Horários de chegada ao Google.</span><button id="export" class="text-button" disabled>Baixar CSV ↓</button></div></article>
+        <article class="panel chart-panel"><div class="panel-heading"><div><h3>Histórico do nível da água</h3><p>Nível em relação à referência calibrada · cm · horário de Brasília</p></div><div class="periods" role="group" aria-label="Período do gráfico"><button data-hours="0.25">15 min</button><button data-hours="1" class="selected">1 h</button><button data-hours="24">24 h</button></div></div><div class="chart-legend"><span><i class="legend-water"></i>Nível calculado</span><span>Registros da planilha no período selecionado</span><span id="interpolation-legend" hidden><i aria-hidden="true" style="background:none;border-top:2px dashed #71877d;height:0"></i>Interpolação visual · sem leituras no intervalo</span></div><div id="chart" class="chart" role="img" aria-label="Aguardando histórico real"></div><div class="chart-footer"><span>Horários de chegada ao Google.</span><button id="export" class="text-button" disabled>Baixar CSV ↓</button></div></article>
         <article class="panel station"><div class="eyebrow dark">ESTAÇÃO / 001</div><h3>Protótipo em bancada</h3><p>R. Ernesto Kugler, 248<br>Maria Antonieta · Pinhais/PR</p><div class="station-visual" aria-hidden="true"><span class="sensor-box">AJ</span><div class="beam"></div><div class="surface">≈ ≈ ≈ ≈ ≈</div></div><dl><div><dt>Localização do sensor</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=R.%20Ernesto%20Kugler%2C%20248%20-%20Maria%20Antonieta%2C%20Pinhais%20-%20PR&amp;query_place_id=ChIJF13SBS7u3JQRYxxUoDRFU5I" target="_blank" rel="noopener">Ver no mapa ↗</a></dd></div><div><dt>Sensor</dt><dd>AJ-SR04M</dd></div><div><dt>Controlador</dt><dd>Heltec V4 · LoRa</dd></div><div><dt>RSSI do último pacote</dt><dd id="rssi">—</dd></div><div><dt>SNR do último pacote</dt><dd id="snr">—</dd></div><div><dt>Bateria</dt><dd>Não medida</dd></div></dl><div class="station-note">Distância não é nível da água. O cálculo depende de uma referência física calibrada.</div></article>
       </div>
       <div class="notice" id="notice" role="status"><span class="notice-symbol">…</span><div><strong id="notice-title">Consultando leituras</strong><p id="notice-text">Aguardando resposta da integração com a planilha.</p></div><span class="notice-tag">PROTÓTIPO</span></div>
@@ -68,6 +68,8 @@ function drawChart() {
   const end=Date.now(), start=end-hours*3600000;
   const data=visibleReadings(end);
   const valid=data.filter(hasLevel);
+  const legend=$('interpolation-legend');
+  legend.hidden=true;
   $('export').disabled=!data.length;
   if (!valid.length) {
     $('chart').innerHTML='<p class="empty">Nenhum nível calculado neste período. O nível fica disponível após a calibração e requer uma leitura válida.</p>';
@@ -84,7 +86,7 @@ function drawChart() {
     const n=low+(high-low)*i/4;
     svg+=`<line x1="${left}" x2="${w-right}" y1="${y(n)}" y2="${y(n)}" stroke="#e9eee7"/><text x="${left-8}" y="${y(n)+4}" text-anchor="end" font-size="10" fill="#71877d">${fmt(n)}</text>`;
   }
-  let path='',isolated='',previous=null;
+  let path='',isolated='',interpolation='',previous=null,previousValid=null;
   const contiguous=(a,b)=>a && b && b.time-a.time<=30000 && b.uptime_ms>=a.uptime_ms;
   data.forEach((r,i)=>{
     if(!hasLevel(r)){previous=null;return;}
@@ -92,11 +94,20 @@ function drawChart() {
     const point=x(r).toFixed(2)+' '+y(r.nivel_cm).toFixed(2);
     const linked=contiguous(previous,r);
     path+=(linked?' L':' M')+point;
+    if(hours===24 && !linked && previousValid &&
+       r.time>previousValid.time && r.uptime_ms>=previousValid.uptime_ms) {
+      interpolation+=' M'+x(previousValid).toFixed(2)+' '+y(previousValid.nivel_cm).toFixed(2)+' L'+point;
+    }
     if(hours===24 && !linked && !(hasLevel(data[i+1]) && contiguous(r,data[i+1]))) {
       isolated+=' M'+point+' L'+point;
     }
     previous=r;
+    previousValid=r;
   });
+  if(interpolation) {
+    legend.hidden=false;
+    svg+=`<path d="${interpolation}" fill="none" stroke="#71877d" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+  }
   svg+=`<path d="${path}" fill="none" stroke="#267461" stroke-width="2.5" stroke-linejoin="round"/>`;
   if(hours===24) {
     svg+=`<path d="${isolated}" fill="none" stroke="#267461" stroke-width="2.5" stroke-linecap="round"/>`;
